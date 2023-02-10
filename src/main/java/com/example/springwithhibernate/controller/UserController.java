@@ -1,5 +1,6 @@
 package com.example.springwithhibernate.controller;
 
+import com.example.springwithhibernate.dto.UserLoginDto;
 import com.example.springwithhibernate.entity.UserEntity;
 import com.example.springwithhibernate.exceptions.UserIsNotExistException;
 import com.example.springwithhibernate.model.User;
@@ -10,6 +11,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/user")
@@ -22,19 +25,12 @@ public class UserController {
         this.userService = userService;
     }
     @GetMapping
-    public ResponseEntity<String> getUsers() {
-        return ResponseEntity.ok("Hello World");
-    }
-
-    @PostMapping
-    public ResponseEntity postUser(@RequestBody UserEntity user) {
-        logger.log(Level.INFO, "Post request: " + user);
-        try {
-            UserEntity userEntity = userService.registerUser(user);
-            return ResponseEntity.ok(User.toModel(userEntity));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<User[]> getUsers() {
+        // Return all users
+        Iterable<UserEntity> users = userService.getAllUsers();
+        ArrayList<User> usersList = new ArrayList<>();
+        users.forEach(user -> usersList.add(User.toModel(user)));
+        return ResponseEntity.ok(usersList.toArray(new User[0]));
     }
 
     @GetMapping("/{id}")

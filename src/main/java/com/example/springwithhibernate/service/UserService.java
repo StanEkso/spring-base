@@ -1,9 +1,12 @@
 package com.example.springwithhibernate.service;
 
+import com.example.springwithhibernate.dto.UserLoginDto;
 import com.example.springwithhibernate.entity.UserEntity;
 import com.example.springwithhibernate.exceptions.UserAlreadyExists;
 import com.example.springwithhibernate.exceptions.UserIsNotExistException;
+import com.example.springwithhibernate.model.User;
 import com.example.springwithhibernate.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,5 +29,17 @@ public class UserService {
             return user;
         }
         throw new UserIsNotExistException("User is not exist");
+    }
+
+    public UserEntity getUserByUsername(String username) throws UserIsNotExistException {
+        UserEntity user = userRepository.findByUsername(username);
+        if (user != null) {
+            return user;
+        }
+        throw new UserIsNotExistException("User is not exist");
+    }
+
+    public Iterable<UserEntity> getAllUsers() {
+        return userRepository.findAll();
     }
 }
