@@ -7,6 +7,7 @@ import com.example.springwithhibernate.exceptions.UserIsNotExistException;
 import com.example.springwithhibernate.model.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class AuthService {
@@ -18,7 +19,7 @@ public class AuthService {
 
     private UserEntity hashUserPassword(UserEntity user) {
         String hashedPassword = encoder.encode(user.getPassword());
-        return new UserEntity(user.getId(), user.getUsername(), hashedPassword);
+        return new UserEntity(user.getId(), user.getEmail(), user.getUsername(), hashedPassword);
     }
 
     private boolean isPasswordsEquals(String password, String hashedPassword) {
@@ -33,7 +34,7 @@ public class AuthService {
             return null;
     }
 
-    public UserEntity registerUser(UserEntity user) throws UserAlreadyExistsException {
-        return userService.registerUser(hashUserPassword(user));
+    public UserEntity registerUser(UserEntity user, MultipartFile file) throws UserAlreadyExistsException {
+        return userService.registerUser(hashUserPassword(user), file);
     }
 }

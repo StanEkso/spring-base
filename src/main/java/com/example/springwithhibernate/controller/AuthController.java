@@ -7,21 +7,22 @@ import com.example.springwithhibernate.exceptions.UserIsNotExistException;
 import com.example.springwithhibernate.model.User;
 import com.example.springwithhibernate.service.AuthService;
 import com.example.springwithhibernate.service.DefaultMailService;
+import com.example.springwithhibernate.service.FileService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
     private final AuthService authService;
     private final DefaultMailService mailService;
+    private final FileService fileService;
 
-    public AuthController(AuthService authService, DefaultMailService mailService) {
+    public AuthController(AuthService authService, DefaultMailService mailService, FileService fileService) {
         this.authService = authService;
         this.mailService = mailService;
+        this.fileService = fileService;
     }
 
     @PostMapping("/signin")
@@ -39,14 +40,23 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@RequestBody UserEntity dto) {
+    public ResponseEntity<String> registerUser(@RequestPart("img") MultipartFile file, @RequestPart UserEntity dto) {
         UserEntity user = null;
         try {
-            user = authService.registerUser(dto);
-            this.mailService.sendMessage(user.getUsername());
+            user = authService.registerUser(dto, file);
+            long startTime = System.currentTimeMillis();
+            this.mailService.sendRegisterEmail(user);
+            long endTime = System.currentTimeMillis();
+            System.out.println("That took " + (endTime - startTime) + " milliseconds");
             return ResponseEntity.ok("User is registered");
         } catch (UserAlreadyExistsException e) {
             return ResponseEntity.badRequest().body("User is already registered");
         }
+    }
+
+    @PostMapping("/file")
+    public ResponseEntity<String> uploadFile(@RequestParam("img") MultipartFile file) {
+        String filename = fileService.saveFile(file, "avatars");
+        return ResponseEntity.ok(filename);
     }
 }
