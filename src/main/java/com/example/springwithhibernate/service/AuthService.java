@@ -2,7 +2,7 @@ package com.example.springwithhibernate.service;
 
 import com.example.springwithhibernate.dto.UserLoginDto;
 import com.example.springwithhibernate.entity.UserEntity;
-import com.example.springwithhibernate.exceptions.UserAlreadyExists;
+import com.example.springwithhibernate.exceptions.UserAlreadyExistsException;
 import com.example.springwithhibernate.exceptions.UserIsNotExistException;
 import com.example.springwithhibernate.model.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,7 +33,7 @@ public class AuthService {
             return null;
     }
 
-    public UserEntity registerUser(UserEntity user) throws UserAlreadyExists {
+    public UserEntity registerUser(UserEntity user) throws UserAlreadyExistsException {
         return userService.registerUser(hashUserPassword(user));
     }
 }

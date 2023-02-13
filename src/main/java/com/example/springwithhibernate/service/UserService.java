@@ -1,12 +1,9 @@
 package com.example.springwithhibernate.service;
 
-import com.example.springwithhibernate.dto.UserLoginDto;
 import com.example.springwithhibernate.entity.UserEntity;
-import com.example.springwithhibernate.exceptions.UserAlreadyExists;
+import com.example.springwithhibernate.exceptions.UserAlreadyExistsException;
 import com.example.springwithhibernate.exceptions.UserIsNotExistException;
-import com.example.springwithhibernate.model.User;
 import com.example.springwithhibernate.repository.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,9 +13,9 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-    public UserEntity registerUser(UserEntity user) throws UserAlreadyExists {
+    public UserEntity registerUser(UserEntity user) throws UserAlreadyExistsException {
         if (userRepository.findByUsername(user.getUsername()) != null) {
-            throw new UserAlreadyExists("User already exists");
+            throw new UserAlreadyExistsException("User already exists");
         }
         return userRepository.save(user);
     }

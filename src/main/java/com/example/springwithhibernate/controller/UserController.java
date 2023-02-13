@@ -25,12 +25,12 @@ public class UserController {
         this.userService = userService;
     }
     @GetMapping
-    public ResponseEntity<User[]> getUsers() {
-        // Return all users
+    public ResponseEntity<Iterable<UserEntity>> getUsers() {
+        logger.log(Level.INFO, "Get all users");
         Iterable<UserEntity> users = userService.getAllUsers();
         ArrayList<User> usersList = new ArrayList<>();
         users.forEach(user -> usersList.add(User.toModel(user)));
-        return ResponseEntity.ok(usersList.toArray(new User[0]));
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
