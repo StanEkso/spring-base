@@ -17,11 +17,14 @@ public class UserService {
         this.fileService = fileService;
     }
     public UserEntity registerUser(UserEntity user, MultipartFile avatar) throws UserAlreadyExistsException {
-        if (userRepository.findByUsername(user.getUsername()) != null) {
+        if (
+                userRepository.findByUsername(user.getUsername()) != null
+                        || userRepository.findByEmail(user.getEmail()) != null
+        ) {
             throw new UserAlreadyExistsException("User already exists");
         }
         try {
-            String fileName = fileService.saveFile(avatar, "avatars/" + user.getUsername());
+            String fileName = fileService.saveFile(avatar, "avatars/" + user.getEmail());
             user.setAvatarUrl(fileName);
         } catch (Exception e) {
             e.printStackTrace();

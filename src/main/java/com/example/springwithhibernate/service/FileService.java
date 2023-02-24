@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.UUID;
 
 @Service
 public class FileService {
@@ -48,10 +47,12 @@ public class FileService {
                 throw new RuntimeException("File name is null");
             }
 
-            Path directory = rootLocation.resolve(prefix).resolve(UUID.randomUUID().toString());
+            Path directory = rootLocation.resolve(prefix);
             Files.createDirectories(directory);
-            Files.copy(file.getInputStream(), directory.resolve(originalFilename));
-            return directory.resolve(originalFilename).toString();
+            try {
+                Files.copy(file.getInputStream(), directory.resolve(originalFilename));
+            } catch (Exception e) {}
+            return Paths.get(prefix).resolve(originalFilename).toString();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

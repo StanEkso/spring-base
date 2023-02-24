@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="mx-4 sm:mx-8 md:mx-16 lg:mx-24 xl:mx-32 py-2">
+
+<h1 class="text-4xl">SignUp</h1>
+<!--/*@thymesVar id="user" type="com.example.springwithhibernate.dto.UserCreationDto"*/-->
+<form th:action="@{/signupUser}" th:object="${user}"  method="POST" class="grid gap-1" enctype="multipart/form-data">
+    <label >
+        Email
+    </label>
+    <input type="email" name="email" placeholder="e.g. email@example.com" class="rounded-md border px-2 py-1" required>
+    <label>
+        Username
+    </label>
+    <input class="rounded-md border px-2 py-1" type="text" name="username" placeholder="e.g. unknown" required>
+    <label>
+        Password
+    </label>
+    <input class="rounded-md border px-2 py-1" type="password" name="password" placeholder="e.g. ********" required>
+    <label>
+        Avatar
+    </label>
+    <input class="rounded-md border px-2 py-1" type="file" name="file">
+    <button type="submit" class="rounded-sm bg-slate-800 text-white px-2 py-1">
+        Register
+    </button>
+</form>
+
+</body>
+</html>

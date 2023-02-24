@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="mx-4 sm:mx-8 md:mx-16 lg:mx-24 xl:mx-32 py-2">
+<div class="flex justify-center items-center">
+    <div class="border-4 border-red-500 rounded-sm p-2">
+        <h1 class="text-xl">
+            An error occurred!
+        </h1>
+        <p th:text="${errorMessage}"></p>
+    </div>
+</div>
+
+</body>
+</html>

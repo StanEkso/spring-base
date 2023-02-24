@@ -66,4 +66,15 @@ public class UserEntity {
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
     }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                '}';
+    }
 }

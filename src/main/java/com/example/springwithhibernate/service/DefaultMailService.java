@@ -29,13 +29,25 @@ public class DefaultMailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(user.getEmail());
         message.setSubject("Регистрация на сайте");
-        message.setFrom("noreply@eksodev.com");
         message.setText("Спасибо за регистрацию, " + user.getUsername() + "!");
         try {
             mailSender.send(message);
             logger.log(Level.INFO, "Email was sent to " + user.getEmail() + "!");
         } catch (Exception e) {
             logger.log(Level.ERROR, "Error while sending email!");
+        }
+    }
+
+    public void sendPlainEmail(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setText(text);
+        message.setTo(to);
+        message.setSubject(subject);
+        try {
+            mailSender.send(message);
+            logger.log(Level.INFO, "Email was sent to " + to);
+        } catch (Exception e) {
+            logger.log(Level.ERROR, "An error occurred while sending email: " + e.getMessage());
         }
     }
 }

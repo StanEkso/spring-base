@@ -1,5 +1,6 @@
 package com.example.springwithhibernate.controller;
 
+import com.example.springwithhibernate.dto.UserCreationDto;
 import com.example.springwithhibernate.dto.UserLoginDto;
 import com.example.springwithhibernate.entity.UserEntity;
 import com.example.springwithhibernate.exceptions.UserAlreadyExistsException;
@@ -8,6 +9,7 @@ import com.example.springwithhibernate.model.User;
 import com.example.springwithhibernate.service.AuthService;
 import com.example.springwithhibernate.service.DefaultMailService;
 import com.example.springwithhibernate.service.FileService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,15 +41,13 @@ public class AuthController {
         return ResponseEntity.badRequest().body("Provided password is incorrect");
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@RequestPart("img") MultipartFile file, @RequestPart UserEntity dto) {
+    @PostMapping(value = "/signup", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> registerUser(UserCreationDto body) {
         UserEntity user = null;
         try {
-            user = authService.registerUser(dto, file);
-            long startTime = System.currentTimeMillis();
+            MultipartFile file = body.getFile();
+            user = authService.registerUser(body.toUserEntity(), file);
             this.mailService.sendRegisterEmail(user);
-            long endTime = System.currentTimeMillis();
-            System.out.println("That took " + (endTime - startTime) + " milliseconds");
             return ResponseEntity.ok("User is registered");
         } catch (UserAlreadyExistsException e) {
             return ResponseEntity.badRequest().body("User is already registered");
